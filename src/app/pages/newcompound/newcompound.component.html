@@ -1,0 +1,41 @@
+<div class="max-w-md mx-auto my-10 p-8 bg-white shadow-2xl rounded-xl border border-red-300">
+      <h2 class="text-3xl font-extrabold text-red-700 text-center mb-6">Create New Compound</h2>
+      <p class="text-center text-gray-500 mb-6">Only Admins can add new chemical entries.</p>
+      
+      <div *ngIf="auth.getUserRole() !== 'admin'" class="p-4 mb-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
+          Access Denied: You must be an Admin to view this form.
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #compoundForm="ngForm" class="space-y-5" *ngIf="auth.getUserRole() === 'admin'">
+        
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Compound Name</label>
+          <input [(ngModel)]="newCompound.name" name="name" required 
+                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150">
+        </div>
+
+        <div>
+          <label for="image" class="block text-sm font-medium text-gray-700">Image URL</label>
+          <input [(ngModel)]="newCompound.image" name="image" type="url" required 
+                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-150">
+          <img *ngIf="newCompound.image" [src]="newCompound.image" alt="Compound Preview" class="mt-2 w-full h-24 object-contain rounded-lg border border-gray-200">
+        </div>
+        
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea [(ngModel)]="newCompound.description" name="description" rows="4" required 
+                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 resize-none transition duration-150"></textarea>
+        </div>
+
+        <div *ngIf="message()" [class.text-green-600]="isSuccess()" [class.text-red-600]="!isSuccess()" 
+             class="text-sm p-3 rounded-lg border" 
+             [class.bg-green-50]="isSuccess()" [class.bg-red-50]="!isSuccess()" [class.border-green-200]="isSuccess()" [class.border-red-200]="!isSuccess">
+          {{ message() }}
+        </div>
+
+        <button type="submit" [disabled]="!compoundForm.valid || isLoading()"
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition duration-200">
+          {{ isLoading() ? 'Adding Compound...' : 'Add Compound' }}
+        </button>
+      </form>
+    </div>

@@ -1,0 +1,114 @@
+<div class="min-h-screen bg-gray-50 flex flex-col font-sans">
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Left Section: Logo and Nav Links -->
+        <div class="flex items-center space-x-4">
+          <a [routerLink]="['/']" class="text-2xl font-bold text-indigo-600 rounded-lg p-1 hover:bg-indigo-50 transition duration-150">
+            ChemApp
+          </a>
+          
+          <!-- Desktop Nav Links -->
+          <div class="hidden md:flex space-x-4">
+            <a [routerLink]="['/']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact: true}" 
+               class="nav-link">Home</a>
+            
+            <ng-container *ngIf="auth.isAuthenticated()">
+              <a [routerLink]="['/compound/data']" routerLinkActive="router-link-active" class="nav-link">Compound Data</a>
+            </ng-container>
+
+            <ng-container *ngIf="auth.getUserRole() === 'admin'">
+              <a [routerLink]="['/admin/compound']" routerLinkActive="router-link-active" class="nav-link">New Compound</a>
+              <a [routerLink]="['/adduser']" routerLinkActive="router-link-active" class="nav-link">New User</a>
+            </ng-container>
+          </div>
+        </div>
+        
+        <!-- Right Section: Auth Status and Buttons -->
+        <div class="flex items-center space-x-4">
+          
+          <!-- Desktop Auth Status and Buttons -->
+          <ng-container *ngIf="auth.isAuthChecked$ | async as isReady">
+            <span *ngIf="!isReady" class="text-sm text-yellow-600 px-3 py-1 bg-yellow-50 border border-yellow-200 rounded-full">
+              Checking Auth...
+            </span>
+            
+            <ng-container *ngIf="isReady">
+              <!-- Logged In Status (Visible on Desktop) -->
+              <ng-container *ngIf="auth.isAuthenticated()">
+                <div class="flex items-center space-x-3">
+                  <span class="text-sm font-medium text-gray-700 p-2 bg-indigo-100 rounded-lg hidden md:block">
+                    👋 {{ (auth.user$ | async)?.username || 'User' }}
+                  </span>
+                  
+                  <button (click)="auth.logout()"
+                          class="auth-button bg-red-500 hover:bg-red-600 shadow-md">
+                    Logout
+                  </button>
+                </div>
+              </ng-container>
+              
+              <!-- Logged Out State (Visible on Desktop) -->
+              <ng-container *ngIf="!auth.isAuthenticated()">
+                <a [routerLink]="['/login']" class="text-indigo-600 hover:text-indigo-700 text-sm font-semibold hidden md:block">Login</a>
+                <a [routerLink]="['/signup']" class="auth-button bg-indigo-600 hover:bg-indigo-700 shadow-md hidden md:block">Sign Up</a>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          
+          <!-- Mobile Menu Button (Hamburger) -->
+          <div class="-mr-2 flex items-center md:hidden">
+            <button type="button" (click)="toggleMobileMenu()"
+                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+              <span class="sr-only">Open main menu</span>
+              
+              <!-- Toggle Icon based on state -->
+              <svg *ngIf="!isMobileMenuOpen()" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg *ngIf="isMobileMenuOpen()" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Panel (Hidden by default, shown when toggled) -->
+    <div [class.hidden]="!isMobileMenuOpen()" class="md:hidden border-t border-gray-100" id="mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        
+        <!-- Nav Links - MODIFIED: Added text-sm to the mobile-nav-link definition -->
+        <a [routerLink]="['/']" (click)="closeMobileMenu()" class="mobile-nav-link mr-4 text-sm">Home</a>
+        
+        <ng-container *ngIf="auth.isAuthenticated()">
+          <a [routerLink]="['/compound/data']" (click)="closeMobileMenu()" class="mobile-nav-link text-sm mr-4">Data</a>
+          
+          <ng-container *ngIf="auth.getUserRole() === 'admin'">
+            <a [routerLink]="['/admin/compound']" (click)="closeMobileMenu()" class="mobile-nav-link text-sm mr-4">Add</a>
+            <a [routerLink]="['/adduser']" (click)="closeMobileMenu()" class="mobile-nav-link text-sm mr-4">New User</a>
+          </ng-container>
+
+          <!-- Mobile Logout Button -->
+          <button (click)="auth.logout(); closeMobileMenu()"
+                  class="mobile-nav-link text-sm w-full text-left auth-button bg-red-500 hover:bg-red-600">
+            Logout ({{ (auth.user$ | async)?.username }})
+          </button>
+        </ng-container>
+
+        <!-- Mobile Public Links -->
+        <ng-container *ngIf="!auth.isAuthenticated()">
+          <a [routerLink]="['/login']" (click)="closeMobileMenu()" class="mobile-nav-link text-sm">Login</a>
+          <a [routerLink]="['/signup']" (click)="closeMobileMenu()" class="mobile-nav-link text-sm bg-indigo-600 text-white hover:bg-indigo-700">Sign Up</a>
+        </ng-container>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
