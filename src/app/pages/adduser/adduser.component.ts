@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AUthApiController } from '../../controller/auth.controller';
-import { Router , RouterModule} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 interface NewUserForm {
   username: string;
@@ -15,11 +15,11 @@ interface NewUserForm {
 @Component({
   selector: 'add_user',
   standalone: true,
-  imports: [CommonModule , FormsModule, RouterModule],
-  templateUrl : './adduser.component.html'
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './adduser.component.html'
 })
 export class AddUserComponent {
-   private apiController = inject(AUthApiController);
+  private apiController = inject(AUthApiController);
   private router = inject(Router);
 
   newUser: NewUserForm = {
@@ -42,8 +42,9 @@ export class AddUserComponent {
       next: (response) => {
         this.isLoading = false;
         this.isSuccess = true;
-        this.message = `Successfully created user`;
-        
+        this.message = `The new admin was created successfully!
+Email couldn’t be sent because this deployment doesn’t support outgoing mail. Otherwise, an email with the correct login and password would be sent to the user.`;
+
         // Optional: Reset form after success
         this.newUser = { username: '', email: '', password: '', role: 'user' };
       },
