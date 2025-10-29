@@ -1,8 +1,8 @@
-<div class="p-8 bg-white shadow-2xl rounded-xl">
-      <h2 class="text-3xl font-extrabold text-indigo-700 mb-6 border-b pb-2">Chemical Compound Explorer</h2>
+<div class="p-4 sm:p-6 lg:p-8 bg-white shadow-2xl rounded-xl">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-indigo-700 mb-4 sm:mb-6 border-b pb-2">Chemical Compound Explorer</h2>
 
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center space-x-3">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 sm:gap-0">
+        <div class="flex items-center space-x-3 flex-wrap justify-center sm:justify-start">
           <span class="text-sm font-medium">Role:</span>
           <span class="px-2 py-1 rounded-full text-xs font-semibold"
                 [ngClass]="auth.getUserRole() === 'admin' ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'">
@@ -18,7 +18,7 @@
                   class="px-3 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 transition duration-150">
             Previous
           </button>
-          <span>Page {{ currentPage() }} of {{ compoundList().totalPages }}</span>
+          <span class="whitespace-nowrap">Page {{ currentPage() }} of {{ compoundList().totalPages }}</span>
           <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === compoundList().totalPages || isLoading()"
                   class="px-3 py-1 border rounded-md hover:bg-gray-100 disabled:opacity-50 transition duration-150">
             Next
@@ -26,59 +26,59 @@
         </div>
       </div>
 
-      <div class="mt-8">
+      <div class="mt-4 sm:mt-8">
         
-        <div *ngIf="selectedCompound()" class="border p-6 rounded-lg shadow-inner bg-indigo-50">
+        <div *ngIf="selectedCompound()" class="border p-4 sm:p-6 rounded-lg shadow-inner bg-indigo-50">
           <button (click)="clearSelection()" class="text-indigo-600 hover:text-indigo-800 text-sm mb-4 font-medium block">
             &larr; Back to List (Page {{ currentPage() }})
           </button>
 
           <div *ngIf="!isEditing()">
-            <div class="flex items-start space-x-6">
-              <img [src]="selectedCompound()!.image" [alt]="selectedCompound()!.name" class="w-48 h-48 object-cover rounded-md shadow-md">
-              <div>
-                <h3 class="text-3xl font-bold mb-2 text-indigo-800">{{ selectedCompound()!.name }} (ID: {{ selectedCompound()!.id }})</h3>
-                <p class="text-gray-700 whitespace-pre-wrap">{{ selectedCompound()!.description }}</p>
+            <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <img [src]="selectedCompound()!.image" [alt]="selectedCompound()!.name" class="w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-md shadow-md flex-shrink-0">
+              <div class="text-center sm:text-left">
+                <h3 class="text-xl sm:text-3xl font-bold mb-1 sm:mb-2 text-indigo-800">{{ selectedCompound()!.name }} (ID: {{ selectedCompound()!.id }})</h3>
+                <p class="text-gray-700 whitespace-pre-wrap text-sm sm:text-base">{{ selectedCompound()!.description }}</p>
               </div>
             </div>
 
-            <div *ngIf="auth.getUserRole() === 'admin'" class="mt-6 flex space-x-4">
+            <div *ngIf="auth.getUserRole() === 'admin'" class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <button (click)="toggleEditMode()"
-                      class="px-4 py-2 bg-red-600 text-white font-medium rounded-lg shadow-md hover:bg-red-700 transition duration-150">
+                      class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white font-medium rounded-lg shadow-md hover:bg-red-700 transition duration-150 text-sm">
                 Edit Details
               </button>
               <button (click)="deleteCompound()"
-                      class="px-4 py-2 bg-gray-700 text-white font-medium rounded-lg shadow-md hover:bg-gray-800 transition duration-150">
+                      class="w-full sm:w-auto px-4 py-2 bg-gray-700 text-white font-medium rounded-lg shadow-md hover:bg-gray-800 transition duration-150 text-sm">
                 Delete Compound
               </button>
             </div>
           </div>
 
           <form *ngIf="isEditing()" (ngSubmit)="saveCompound()" class="space-y-4">
-            <h3 class="text-2xl font-bold text-red-800 mb-4">Editing: {{ editableCompound().name }}</h3>
+            <h3 class="text-xl sm:text-2xl font-bold text-red-800 mb-4">Editing: {{ editableCompound().name }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">Name</label>
-                <input [(ngModel)]="editableCompound().name" name="name" required class="mt-1 block w-full border rounded-md p-2">
+                <input [(ngModel)]="editableCompound().name" name="name" required class="mt-1 block w-full border rounded-md p-2 text-sm">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">Image URL</label>
-                <input [(ngModel)]="editableCompound().image" name="image" required class="mt-1 block w-full border rounded-md p-2">
+                <input [(ngModel)]="editableCompound().image" name="image" required class="mt-1 block w-full border rounded-md p-2 text-sm">
               </div>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">Description</label>
               <textarea [(ngModel)]="editableCompound().description" name="description" rows="5" required 
-                        class="mt-1 block w-full border rounded-md p-2 resize-none"></textarea>
+                        class="mt-1 block w-full border rounded-md p-2 resize-none text-sm"></textarea>
             </div>
             
-            <div class="flex space-x-4 pt-2">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
               <button type="submit" [disabled]="isLoading()"
-                      class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50 transition duration-150">
+                      class="w-full sm:w-auto px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50 transition duration-150 text-sm">
                 {{ isLoading() ? 'Saving...' : 'Save Changes' }}
               </button>
               <button type="button" (click)="toggleEditMode()"
-                      class="px-4 py-2 bg-gray-400 text-white font-medium rounded-lg shadow-md hover:bg-gray-500 transition duration-150">
+                      class="w-full sm:w-auto px-4 py-2 bg-gray-400 text-white font-medium rounded-lg shadow-md hover:bg-gray-500 transition duration-150 text-sm">
                 Cancel
               </button>
             </div>
@@ -86,17 +86,17 @@
         </div>
 
         <div *ngIf="!selectedCompound()">
-          <p class="text-lg mb-4 text-gray-700">Showing {{ compoundList().compounds.length }} results out of {{ compoundList().totalItems }} total compounds:</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <p class="text-base sm:text-lg mb-4 text-gray-700 text-center sm:text-left">Showing {{ compoundList().compounds.length }} results out of {{ compoundList().totalItems }} total compounds:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             <div *ngFor="let compound of compoundList().compounds" 
                  (click)="viewDetails(compound)"
                  class="border border-gray-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl cursor-pointer transition duration-200 bg-white">
               
               <img [src]="compound.image" [alt]="compound.name" class="w-full h-32 object-cover">
               
-              <div class="p-4">
-                <h4 class="text-lg font-semibold text-indigo-600 truncate mb-1">{{ compound.name }}</h4>
-                <p class="text-sm text-gray-500 line-clamp-3">{{ compound.description }}</p>
+              <div class="p-3 sm:p-4">
+                <h4 class="text-base sm:text-lg font-semibold text-indigo-600 truncate mb-1">{{ compound.name }}</h4>
+                <p class="text-xs sm:text-sm text-gray-500 line-clamp-3">{{ compound.description }}</p>
               </div>
             </div>
           </div>
